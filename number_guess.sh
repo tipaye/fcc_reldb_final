@@ -6,7 +6,8 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 GUESSWORK(){
   PLAYER=$1
-  SECRET=$((1 + $RANDOM % 1000))
+  SECRET=$((1 + $RANDOM % 100))
+  #SECRET=4
   GUESSES=0
   
   for (( ; ; ))
@@ -26,7 +27,8 @@ GUESSWORK(){
       echo "It's lower than that, guess again:"
     else
       GUESSES=$((GUESSES+1))
-      echo "You guessed it in $GUESSES tries. The secret number was $((SECRET)). Nice job!"
+      #echo "You guessed it in $GUESSES tries. The secret number was $SECRET. Nice job!"
+      echo You guessed it in $GUESSES tries. The secret number was $SECRET. Nice job!
       GAMEOVER=$($PSQL "UPDATE stats SET games = games + 1 WHERE username = '$PLAYER'")
       GAMEOVER=$($PSQL "UPDATE stats SET best = $GUESSES WHERE username = '$PLAYER' AND (($GUESSES < best) OR (best IS NULL))")
       break
@@ -45,10 +47,13 @@ MAIN_MENU() {
       INSERT_USER_RESULT=$($PSQL "INSERT INTO stats (username, games) VALUES ('$USER_NAME', 0)")
       # get user major_id
       CURR_USER=$($PSQL "SELECT username FROM stats WHERE username='$USER_NAME'")
-      echo "Welcome, $CURR_USER! It looks like this is your first time here."
+      echo Welcome, $CURR_USER! It looks like this is your first time here.
     else
-      IFS='|' read -r NUMGAMES BESTGAME <<<$($PSQL "SELECT games, best FROM stats WHERE username='$CURR_USER'")
-      echo "Welcome back, $CURR_USER! You have played $NUM_GAMES games, and your best game took $BEST_GAME guesses."
+      #IFS='|' read -r NUMGAMES BESTGAME <<<$($PSQL "SELECT games, best FROM stats WHERE username='$CURR_USER'")
+      NUM_GAMES=$($PSQL "SELECT games FROM stats WHERE username='$CURR_USER'")
+      BEST_GAME=$($PSQL "SELECT best FROM stats WHERE username='$CURR_USER'")
+      #echo "Welcome back, $CURR_USER! You have played $NUM_GAMES games, and your best game took $BEST_GAME guesses."
+      echo Welcome back, $CURR_USER! You have played $NUM_GAMES games, and your best game took $BEST_GAME guesses.
     fi
 
     GUESSWORK "$CURR_USER"
