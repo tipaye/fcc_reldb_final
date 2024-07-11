@@ -6,7 +6,7 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 GUESSWORK(){
   PLAYER=$1
-  SECRET=$((1 + $RANDOM % 10))
+  SECRET=$((1 + $RANDOM % 1000))
   GUESSES=0
   
   for (( ; ; ))
