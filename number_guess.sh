@@ -6,7 +6,7 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 
 GUESSWORK(){
   PLAYER=$1
-  SECRET=$((1 + $RANDOM % 1000))
+  SECRET=$((1 + $RANDOM % 10))
   GUESSES=0
   
   for (( ; ; ))
@@ -16,7 +16,7 @@ GUESSWORK(){
 
     REGEX='^[0-9]+$'
     if ! [[ $PLAYER_GUESS =~ $REGEX ]]; then
-      GUESSES=$((GUESSES+1))
+      #GUESSES=$((GUESSES+1))
       echo "That is not an integer, guess again:"
     elif [[ $PLAYER_GUESS -lt $SECRET ]]; then
       GUESSES=$((GUESSES+1))
